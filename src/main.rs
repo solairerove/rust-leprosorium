@@ -1,13 +1,11 @@
 fn main() {
-    let sum = 5 + 3;
-    println!("{}", sum);
+    let tup: (i32, f64, u8) = (500, 6.5, 1);
+    let (x, y, z) = tup;
+    println!("x: {}, y: {}, z: {}", x, y, z);
 
-    let difference = 95.5 - 4.3;
-    println!("{}", difference);
+    let five_hundred = tup.0;
+    let six_point_five = tup.1;
+    let one = tup.2;
 
-    let truncate = 5 / -3;
-    println!("{}", truncate);
-
-    let division = 56.7 / 33.2;
-    println!("{}", division);
+    println!("[0]: {five_hundred}, [1]: {six_point_five}, [2]: {one}")
 }
