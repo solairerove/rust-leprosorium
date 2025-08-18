@@ -1,5 +1,5 @@
 fn main() {
-    let tup: (i32, f64, u8) = (500, 6.5, 1);
+    let tup:(i32, f64, &str) = (500, 6.5, "1");
     let (x, y, z) = tup;
     println!("x: {}, y: {}, z: {}", x, y, z);
 
