@@ -1,10 +1,9 @@
 fn main() {
-    let mut counter = 3;
+    let a = [1, 2, 3, 4, 5];
+    let mut idx = 0;
 
-    while counter != 0 {
-        println!("{}", counter);
-        counter = counter - 1;
+    while idx < a.len() {
+        println!("a[{}] = {}", idx, a[idx]);
+        idx += 1;
     }
-
-    println!("LIFTOFF!!!");
 }
