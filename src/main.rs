@@ -1,9 +1,7 @@
 fn main() {
-    let a = [1, 2, 3, 4, 5];
-    let mut idx = 0;
+    let a = [10, 2, 3, 4, 5];
 
-    while idx < a.len() {
-        println!("a[{}] = {}", idx, a[idx]);
-        idx += 1;
+    for element in a {
+        println!("The value is {}", element);
     }
 }
