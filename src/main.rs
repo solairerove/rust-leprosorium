@@ -1,6 +1,7 @@
 fn main() {
-    let mut s = String::from("Hello");
-    println!("{}", s);
-    s.push_str(", world!");
-    println!("{}", s);
+    let mut x = 2;
+    let y = x;
+    println!("{x} {y}");
+    x = 4;
+    println!("{x} {y}");
 }
