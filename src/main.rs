@@ -1,6 +1,6 @@
 fn main() {
-    let s1 = String::from("hello");
-    let s2 = s1;
+    let mut s = String::from("hello");
+    s = String::from("hoy");
 
-    println!("{}, world!", s2);
+    println!("{s}, world!");
 }
