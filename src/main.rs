@@ -18,12 +18,10 @@ fn main() {
 
     let user2 = User {
         active: false,
-        username: user1.username,
-        email: user1.email,
-        sign_in_count: user1.sign_in_count,
+        ..user1
     };
 
-    println!("{:?}", user2.active);
+    println!("{:?} {}", user2.active, user2.username);
 }
 
 struct User {
