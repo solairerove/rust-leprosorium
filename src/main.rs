@@ -15,6 +15,15 @@ fn main() {
     let user1 = build_user(String::from("pizda@gmail.com"), String::from("hui"));
 
     println!("email: {} username: {}", user1.email, user1.username);
+
+    let user2 = User {
+        active: false,
+        username: user1.username,
+        email: user1.email,
+        sign_in_count: user1.sign_in_count,
+    };
+
+    println!("{:?}", user2.active);
 }
 
 struct User {
