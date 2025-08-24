@@ -24,6 +24,25 @@ fn main() {
     }
 }
 
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState),
+}
+
+fn value_in_cents(coin: Coin) -> u8 {
+    match coin {
+        Coin::Penny => 1,
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+        Coin::Quarter(state) => {
+            println!("State quarter from {:?}!", state);
+            25
+        }
+    }
+}
+
 #[derive(Debug)]
 enum UsState {
     Alabama,
@@ -41,32 +60,15 @@ impl UsState {
 }
 
 fn describe_state_quarter(coin: Coin) -> Option<String> {
-    if let Coin::Quarter(state) = coin {
-        if state.existed_in(1900) {
-            Some(format!("{state:?} is pretty old, for America!"))
-        } else {
-            Some(format!("{state:?} is relatively new."))
-        }
+    let state = if let Coin::Quarter(state) = coin {
+        state
     } else {
-        None
-    }
-}
+        return None;
+    };
 
-enum Coin {
-    Penny,
-    Nickel,
-    Dime,
-    Quarter(UsState),
-}
-
-fn value_in_cents(coin: Coin) -> u8 {
-    match coin {
-        Coin::Penny => 1,
-        Coin::Nickel => 5,
-        Coin::Dime => 10,
-        Coin::Quarter(state) => {
-            println!("State quarter from {:?}!", state);
-            25
-        }
+    if state.existed_in(1900) {
+        Some(format!("{state:?} is pretty old, for America!"))
+    } else {
+        Some(format!("{state:?} is relatively new."))
     }
 }
