@@ -1,1 +1,3 @@
-fn take_payment() {}
+fn take_payment() {
+    println!("Take payment");
+}

@@ -1,1 +1,3 @@
-fn serve_order() {}
+fn serve_order() {
+    println!("Serving order");
+}

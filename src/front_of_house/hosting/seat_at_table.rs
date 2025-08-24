@@ -1,1 +1,3 @@
-fn seat_at_table() {}
+pub fn call() {
+    println!("Seated at table!");
+}
