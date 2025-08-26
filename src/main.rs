@@ -1,6 +1,5 @@
-use rust_leprosorium::front_of_house::hosting::add_to_waitlist;
+use rust_leprosorium::eat_at_restaurant;
 
 fn main() {
-    add_to_waitlist::add_to_waitlist();
-    add_to_waitlist::remove_to_waitlist();
+    eat_at_restaurant()
 }
