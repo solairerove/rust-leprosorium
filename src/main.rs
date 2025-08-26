@@ -1,12 +1,26 @@
-use std::fmt::Result;
-use std::io::Result as IoResult;
+fn main() {
+    let mut v: Vec<i32> = Vec::new();
+    v.push(5);
+    v.push(6);
+    v.push(7);
+    v.push(8);
 
-fn main() {}
+    let third: &i32 = &v[2];
+    println!("The third element is {}", third);
 
-fn function1() -> Result {
-    //     --snip--
-}
+    let third: Option<&i32> = v.get(2);
+    match third {
+        Some(third) => println!("The third element is {}", third),
+        None => println!("There is no third element."),
+    }
 
-fn function2() -> IoResult<()> {
-    //     --snip--
+    let v2 = vec![1, 2, 3, 4];
+    println!("v2: {:?}", v2);
+    let second: &i32 = &v2[1];
+    println!("The second element is {}", second);
+
+    let second: Option<&i32> = v2.get(1);
+    if let Some(&second) = second {
+        println!("The second element is {}", second);
+    }
 }
