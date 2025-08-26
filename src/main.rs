@@ -23,4 +23,10 @@ fn main() {
     if let Some(&second) = second {
         println!("The second element is {}", second);
     }
+
+    // let does_not_exist = &v2[100];
+    let does_not_exist = v2.get(100);
+    if let None = does_not_exist {
+        println!("The does_not_exist is None.");
+    }
 }
