@@ -1,5 +1,12 @@
-use rust_leprosorium::eat_at_restaurant;
+use std::fmt::Result;
+use std::io::Result as IoResult;
 
-fn main() {
-    eat_at_restaurant()
+fn main() {}
+
+fn function1() -> Result {
+    //     --snip--
+}
+
+fn function2() -> IoResult<()> {
+    //     --snip--
 }
