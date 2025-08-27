@@ -1,17 +1,11 @@
 use std::collections::HashMap;
 
 fn main() {
-    let mut scores = HashMap::new();
-    scores.insert(String::from("Blue"), 10);
-    scores.insert(String::from("Yellow"), 50);
-    for (key, value) in &scores {
-        println!("{}: {}", key, value);
+    let text = "hello world wonderful world";
+    let mut map = HashMap::new();
+    for word in text.split_whitespace() {
+        let cnt = map.entry(word).or_insert(0);
+        *cnt += 1;
     }
-    scores.insert(String::from("Blue"), 50);
-    for (key, value) in &scores {
-        println!("{}: {}", key, value);
-    }
-
-    scores.entry(String::from("Green")).or_insert(100);
-    println!("{:?}", scores);
+    println!("{:?}", map);
 }
