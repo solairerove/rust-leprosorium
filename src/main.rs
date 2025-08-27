@@ -9,4 +9,5 @@ fn main() {
     for (key, value) in &map {
         println!("{}: {}", key, value);
     }
+    println!("{}", field_name);
 }
