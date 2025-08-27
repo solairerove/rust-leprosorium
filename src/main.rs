@@ -11,4 +11,7 @@ fn main() {
     for (key, value) in &scores {
         println!("{}: {}", key, value);
     }
+
+    scores.entry(String::from("Green")).or_insert(100);
+    println!("{:?}", scores);
 }
