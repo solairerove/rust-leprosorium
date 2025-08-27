@@ -7,6 +7,9 @@ fn main() {
     println!("{:?}", scores);
 
     let team_name = String::from("Blue");
-    let score = scores.get(&team_name).cloned().unwrap_or(0);
-    println!("{:?}", score);
+    let score = scores.get(&team_name);
+    match score {
+        Some(score) => println!("{}", score),
+        None => println!("No score"),
+    }
 }
