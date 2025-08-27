@@ -12,4 +12,8 @@ fn main() {
         Some(score) => println!("{}", score),
         None => println!("No score"),
     }
+
+    for (key, value) in &scores {
+        println!("{}: {}", key, value);
+    }
 }
