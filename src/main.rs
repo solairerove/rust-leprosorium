@@ -1,13 +1,14 @@
 use std::collections::HashMap;
 
 fn main() {
-    let field_name = String::from("Favorite color");
-    let field_value = String::from("Blue");
-
-    let mut map = HashMap::new();
-    map.insert(field_name, field_value);
-    for (key, value) in &map {
+    let mut scores = HashMap::new();
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+    for (key, value) in &scores {
         println!("{}: {}", key, value);
     }
-    println!("{}", field_name);
+    scores.insert(String::from("Blue"), 50);
+    for (key, value) in &scores {
+        println!("{}: {}", key, value);
+    }
 }
