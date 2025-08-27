@@ -30,6 +30,10 @@ fn main() {
         println!("The does_not_exist is None.");
     }
 
+    for i in &mut v {
+        *i += 50;
+    }
+
     for i in &v {
         println!("{}", i);
     }
