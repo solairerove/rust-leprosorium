@@ -1,4 +1,10 @@
+use std::fs::File;
+
 fn main() {
-    let v = vec![1, 2, 3];
-    v[99];
+    let greeting_file_result = File::open("hello.txt");
+
+    let greeting_file = match greeting_file_result {
+        Ok(file) => file,
+        Err(error) => panic!("There was a problem opening the file: {:?}", error),
+    };
 }
