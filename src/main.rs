@@ -1,13 +1,12 @@
-use std::fs;
-
 fn main() {
-    let res = read_username_from_file();
-    match res {
-        Ok(username) => println!("{}", username),
-        Err(err) => println!("{}", err),
-    }
-}
+    let number_list = vec![34, 50, 25, 100, 65];
 
-fn read_username_from_file() -> Result<String, std::io::Error> {
-    fs::read_to_string("username.txt")
+    let mut largest = &number_list[0];
+    for number in &number_list {
+        if number > largest {
+            largest = number;
+        }
+    }
+
+    println!("The largest number is {}", largest);
 }
