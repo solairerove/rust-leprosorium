@@ -10,7 +10,7 @@ fn main() {
     println!("The largest char is {result}");
 }
 
-fn largest<T>(list: &[T]) -> &T {
+fn largest<T: std::cmp::PartialOrd>(list: &[T]) -> &T {
     let mut largest = &list[0];
 
     for item in list {
