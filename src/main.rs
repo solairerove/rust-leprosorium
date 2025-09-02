@@ -4,9 +4,18 @@ fn main() {
 
     println!("Point is at ({}, {})", integer.x, integer.y);
     println!("Point is at ({}, {})", float.x, float.y);
+
+    println!("x at point ({})", integer.x());
+    println!("x at point ({})", float.x());
 }
 
 struct Point<T> {
     x: T,
     y: T,
+}
+
+impl<T> Point<T> {
+    fn x(&self) -> &T {
+        &self.x
+    }
 }
