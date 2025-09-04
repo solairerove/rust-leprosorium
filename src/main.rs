@@ -31,6 +31,8 @@ pub trait Summary {
     }
 }
 
+pub trait Display {}
+
 pub struct NewsArticle {
     pub headline: String,
     pub location: String,
@@ -57,6 +59,8 @@ impl Summary for SocialPost {
     }
 }
 
-pub fn notify<T: Summary>(item: &T) {
-    println!("Breaking news! {}", item.summarize());
+impl Display for SocialPost {}
+
+pub fn notify<T: Summary + Display>(item: &T) {
+    println!("{}", item.summarize());
 }
