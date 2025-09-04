@@ -20,7 +20,10 @@ fn main() {
 
     println!("New article available! {}", article.summarize());
 
-    some_function(&post, &post)
+    some_function(&post, &post);
+
+    let another_post = returns_summarizable();
+    println!("{}", another_post.summarize());
 }
 
 pub trait Summary {
@@ -67,4 +70,13 @@ where
     U: Display + Summary,
 {
     println!("{}", u.summarize());
+}
+
+fn returns_summarizable() -> impl Summary {
+    SocialPost {
+        username: String::from("horse_ebooks"),
+        content: String::from("of course, as you probably already know, people"),
+        reply: false,
+        repost: false,
+    }
 }
