@@ -1,82 +1,28 @@
+use std::fmt::Display;
+
 fn main() {
-    let post = SocialPost {
-        username: String::from("solareirve"),
-        content: String::from("of course, as you probably already know, people"),
-        reply: false,
-        repost: false,
+    let point = Pair { x: 12, y: 21 };
+
+    let another_one = Pair {
+        x: String::from("x"),
+        y: String::from("y"),
     };
 
-    println!("1 new post: {}", post.summarize());
-
-    let article = NewsArticle {
-        headline: String::from("Penguins win the Stanley Cup Championship!"),
-        location: String::from("Pittsburgh, PA, USA"),
-        author: String::from("Iceburgh"),
-        content: String::from(
-            "The Pittsburgh Penguins once again are the best \
-             hockey team in the NHL.",
-        ),
-    };
-
-    println!("New article available! {}", article.summarize());
-
-    some_function(&post, &post);
-
-    let another_post = returns_summarizable();
-    println!("{}", another_post.summarize());
+    point.cmp_display();
+    another_one.cmp_display()
 }
 
-pub trait Summary {
-    fn summarize_author(&self) -> String;
-
-    fn summarize(&self) -> String {
-        format!("(Read more from {}...)", self.summarize_author())
-    }
+struct Pair<T> {
+    x: T,
+    y: T,
 }
 
-pub trait Display {}
-
-pub struct NewsArticle {
-    pub headline: String,
-    pub location: String,
-    pub author: String,
-    pub content: String,
-}
-
-impl Summary for NewsArticle {
-    fn summarize_author(&self) -> String {
-        format!("{}", self.author)
-    }
-}
-
-pub struct SocialPost {
-    pub username: String,
-    pub content: String,
-    pub reply: bool,
-    pub repost: bool,
-}
-
-impl Summary for SocialPost {
-    fn summarize_author(&self) -> String {
-        format!("@{}", self.username)
-    }
-}
-
-impl Display for SocialPost {}
-
-fn some_function<T, U>(t: &T, u: &U) -> ()
-where
-    T: Display,
-    U: Display + Summary,
-{
-    println!("{}", u.summarize());
-}
-
-fn returns_summarizable() -> impl Summary {
-    SocialPost {
-        username: String::from("horse_ebooks"),
-        content: String::from("of course, as you probably already know, people"),
-        reply: false,
-        repost: false,
+impl<T: Display + PartialOrd> Pair<T> {
+    fn cmp_display(&self) {
+        if self.x >= self.y {
+            println!("The largest member is x = {}", self.x);
+        } else {
+            println!("The largest member is y = {}", self.y);
+        }
     }
 }
