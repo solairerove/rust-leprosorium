@@ -20,7 +20,7 @@ fn main() {
 
     println!("New article available! {}", article.summarize());
 
-    notify(&post);
+    some_function(&post, &post)
 }
 
 pub trait Summary {
@@ -61,6 +61,10 @@ impl Summary for SocialPost {
 
 impl Display for SocialPost {}
 
-pub fn notify<T: Summary + Display>(item: &T) {
-    println!("{}", item.summarize());
+fn some_function<T, U>(t: &T, u: &U) -> ()
+where
+    T: Display,
+    U: Display + Summary,
+{
+    println!("{}", u.summarize());
 }
