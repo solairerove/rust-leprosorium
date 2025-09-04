@@ -57,6 +57,6 @@ impl Summary for SocialPost {
     }
 }
 
-pub fn notify(summary: &impl Summary) {
-    println!("Breaking news! {}", summary.summarize());
+pub fn notify<T: Summary>(item: &T) {
+    println!("Breaking news! {}", item.summarize());
 }
