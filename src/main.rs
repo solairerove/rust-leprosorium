@@ -19,6 +19,8 @@ fn main() {
     };
 
     println!("New article available! {}", article.summarize());
+
+    notify(&post);
 }
 
 pub trait Summary {
@@ -53,4 +55,8 @@ impl Summary for SocialPost {
     fn summarize_author(&self) -> String {
         format!("@{}", self.username)
     }
+}
+
+pub fn notify(summary: &impl Summary) {
+    println!("Breaking news! {}", summary.summarize());
 }
