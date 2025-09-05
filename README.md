@@ -17,5 +17,6 @@ cargo 1.89.0 (c24e10642 2025-06-23)
 cargo build
 cargo run
 cargo build --release
+cargo test
 ./target/release/rust-leprosorium
 ```
