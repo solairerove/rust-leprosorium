@@ -41,6 +41,9 @@ mod tests {
             height: 1,
         };
 
-        assert!(!smaller.can_hold(&larger));
+        assert!(
+            !smaller.can_hold(&larger),
+            "Smaller Rectangle cannot hold larger"
+        );
     }
 }
