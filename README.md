@@ -4,6 +4,7 @@ Starter offline notes service on Rust:
 - backend: `axum`
 - frontend: server-side HTML + `htmx`
 - storage: local file `notes_data/notes.json` (no database)
+- rust notes: `README_RUST_NOTES.md`
 
 ## Run
 
