@@ -1,22 +1,35 @@
 # rust-leprosorium
-The Rust Playground
 
-# Env
+Starter offline notes service on Rust:
+- backend: `axum`
+- frontend: server-side HTML + `htmx`
+- storage: local file `notes_data/notes.json` (no database)
 
-```shell
-rustc --version
-rustc 1.89.0 (29483883e 2025-08-04)
-
-cargo --version
-cargo 1.89.0 (c24e10642 2025-06-23)
-```
-
-# Build
+## Run
 
 ```shell
-cargo build
 cargo run
-cargo build --release
-cargo test
-./target/release/rust-leprosorium
 ```
+
+Open `http://127.0.0.1:3000`.
+
+## What is implemented
+
+- Create note
+- Notes list
+- Open note details
+- Delete note
+- Persistent file storage without DB
+
+## Why this stack
+
+- `axum` and `tokio` are stable and production-proven.
+- `htmx` keeps frontend simple, no SPA complexity.
+- JSON file storage is enough for first MVP and easy to inspect manually.
+
+## Next steps
+
+- Edit note
+- Tag support
+- Full-text search
+- Export to `.md`
