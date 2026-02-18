@@ -6,10 +6,26 @@ Starter offline notes service on Rust:
 - storage: local file `notes_data/notes.json` (no database)
 - rust notes: `README_RUST_NOTES.md`
 
-## Run
+## Development Commands
 
 ```shell
+# format code
+cargo fmt
+
+# quick compile check
+cargo check
+
+# run app locally
 cargo run
+
+# run tests
+cargo test
+
+# lints (recommended)
+cargo clippy --all-targets --all-features -- -D warnings
+
+# production build
+cargo build --release
 ```
 
 Open `http://127.0.0.1:3000`.
