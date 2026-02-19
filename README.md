@@ -35,6 +35,7 @@ Open `http://127.0.0.1:3000`.
 - Create note
 - Notes list
 - Open note details
+- Edit/update note
 - Delete note
 - Persistent file storage without DB
 
@@ -46,7 +47,6 @@ Open `http://127.0.0.1:3000`.
 
 ## Next steps
 
-- Edit note
 - Tag support
 - Full-text search
 - Export to `.md`

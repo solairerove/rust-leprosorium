@@ -59,6 +59,15 @@ impl NotesStore {
         self.save();
     }
 
+    pub fn update_note(&mut self, id: &str, title: String, body: String) -> Option<Note> {
+        let index = self.notes.iter().position(|note| note.id == id)?;
+        self.notes[index].title = title;
+        self.notes[index].body = body;
+        let updated_note = self.notes[index].clone();
+        self.save();
+        Some(updated_note)
+    }
+
     pub fn get_note(&self, id: &str) -> Option<Note> {
         self.notes.iter().find(|note| note.id == id).cloned()
     }

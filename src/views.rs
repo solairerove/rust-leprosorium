@@ -144,11 +144,13 @@ pub fn render_notes_list(notes: &[Note]) -> String {
   <span class="muted">created: {}</span>
   <div class="note-actions">
     <button hx-get="/notes/{}" hx-target="#note-view" hx-swap="outerHTML">Open</button>
+    <button hx-get="/notes/{}/edit" hx-target="#note-view" hx-swap="outerHTML">Edit</button>
     <button class="delete" hx-delete="/notes/{}" hx-target="#notes-list" hx-swap="outerHTML" hx-confirm="Delete this note?">Delete</button>
   </div>
 </li>"##,
             escape_html(&note.title),
             note.created_at_unix,
+            note.id,
             note.id,
             note.id
         );
@@ -173,4 +175,31 @@ pub fn render_note_view(note: &Note) -> String {
 
 pub fn render_note_not_found() -> String {
     "<section class=\"card\" id=\"note-view\" style=\"grid-column: 1 / -1;\"><p class=\"muted\">Note not found.</p></section>".to_string()
+}
+
+pub fn render_note_edit_form(note: &Note) -> String {
+    format!(
+        r##"<section class="card" id="note-view" style="grid-column: 1 / -1;">
+  <h2>Edit note</h2>
+  <p class="muted">id: {}</p>
+  <form hx-put="/notes/{}" hx-target="#note-view" hx-swap="outerHTML">
+    <input type="text" name="title" value="{}" required />
+    <div style="height: 8px;"></div>
+    <textarea name="body" required>{}</textarea>
+    <div style="height: 8px;"></div>
+    <button type="submit">Update note</button>
+  </form>
+</section>"##,
+        escape_html(&note.id),
+        escape_html(&note.id),
+        escape_html(&note.title),
+        escape_html(&note.body)
+    )
+}
+
+pub fn render_notes_list_oob(notes: &[Note]) -> String {
+    render_notes_list(notes).replace(
+        "<div id=\"notes-list\">",
+        "<div id=\"notes-list\" hx-swap-oob=\"outerHTML\">",
+    )
 }
