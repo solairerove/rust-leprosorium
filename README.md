@@ -44,6 +44,7 @@ Open `http://127.0.0.1:3000`.
 - `axum` and `tokio` are stable and production-proven.
 - `htmx` keeps frontend simple, no SPA complexity.
 - JSON file storage is enough for first MVP and easy to inspect manually.
+- Markdown note body is rendered safely (sanitized HTML).
 
 ## Next steps
 

@@ -147,3 +147,37 @@ For the current notes service:
 - `cargo fmt`
 - `cargo check`
 - `cargo test`
+
+## 7. What `&mut *store` Means
+
+You may see syntax like `&mut *store` when working with a `MutexGuard`.
+
+Context:
+- `store` can be `MutexGuard<NotesStore>`, not `NotesStore` directly.
+- `*store` dereferences the guard to the inner `NotesStore`.
+- `&mut *store` creates a mutable reference: `&mut NotesStore`.
+
+Example:
+
+```rust
+use std::sync::Mutex;
+
+struct NotesStore;
+impl NotesStore {
+    fn touch(&mut self) {}
+}
+
+fn update(store_mutex: &Mutex<NotesStore>) {
+    let mut guard = store_mutex.lock().expect("mutex poisoned");
+
+    // Method-call sugar usually makes this enough:
+    guard.touch();
+
+    // Explicit equivalent form:
+    NotesStore::touch(&mut *guard);
+}
+```
+
+Why this matters:
+- Method-call syntax often hides deref/borrow steps.
+- `&mut *guard` is the explicit form that Rust can require in generic or fully-qualified calls.

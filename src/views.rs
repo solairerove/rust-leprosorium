@@ -1,4 +1,7 @@
-use crate::{models::Note, util::escape_html};
+use crate::{
+    models::Note,
+    util::{escape_html, markdown_to_safe_html},
+};
 
 pub fn render_index_page(notes: &[Note]) -> String {
     let list_html = render_notes_list(notes);
@@ -161,6 +164,7 @@ pub fn render_notes_list(notes: &[Note]) -> String {
 }
 
 pub fn render_note_view(note: &Note) -> String {
+    let rendered_body = markdown_to_safe_html(&note.body);
     format!(
         r##"<section class="card" id="note-view" style="grid-column: 1 / -1;">
   <h2>{}</h2>
@@ -169,7 +173,7 @@ pub fn render_note_view(note: &Note) -> String {
 </section>"##,
         escape_html(&note.title),
         escape_html(&note.id),
-        escape_html(&note.body)
+        rendered_body
     )
 }
 
