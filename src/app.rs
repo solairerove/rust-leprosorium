@@ -12,9 +12,9 @@ pub fn build_router(state: AppState) -> Router {
     Router::new()
         .route("/", get(index))
         .route("/notes", post(create_note))
-        .route("/notes/:id/edit", get(edit_note))
+        .route("/notes/{id}/edit", get(edit_note))
         .route(
-            "/notes/:id",
+            "/notes/{id}",
             get(show_note).put(update_note).delete(delete_note),
         )
         .with_state(state)
