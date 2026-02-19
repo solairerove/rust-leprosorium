@@ -1,85 +1,119 @@
-use std::{
-    cmp::Reverse,
-    fs,
-    path::{Path, PathBuf},
-};
+use std::{fs, path::Path};
+
+use sqlx::{Row, SqlitePool, sqlite::SqliteConnectOptions};
 
 use crate::{models::Note, util::now_unix};
 
+#[derive(Clone)]
 pub struct NotesStore {
-    notes: Vec<Note>,
-    file_path: PathBuf,
+    pool: SqlitePool,
 }
 
 impl NotesStore {
-    pub fn load_or_new(data_dir: &Path) -> Self {
-        let file_path = data_dir.join("notes.json");
+    pub async fn load_or_new(data_dir: &Path) -> Self {
+        let db_path = data_dir.join("notes.db");
 
         if let Err(err) = fs::create_dir_all(data_dir) {
             eprintln!("Failed to create data directory: {err}");
         }
 
-        if let Ok(content) = fs::read_to_string(&file_path) {
-            match serde_json::from_str::<Vec<Note>>(&content) {
-                Ok(notes) => {
-                    return Self { notes, file_path };
-                }
-                Err(err) => {
-                    eprintln!("Failed to parse notes file, starting empty store: {err}");
-                }
-            }
-        }
+        let options = SqliteConnectOptions::new()
+            .filename(&db_path)
+            .create_if_missing(true);
 
-        Self {
-            notes: Vec::new(),
-            file_path,
-        }
+        let pool = SqlitePool::connect_with(options)
+            .await
+            .unwrap_or_else(|err| {
+                panic!(
+                    "Failed to connect SQLite database {}: {err}",
+                    db_path.display()
+                )
+            });
+
+        sqlx::query(
+            r#"
+            CREATE TABLE IF NOT EXISTS notes (
+                id TEXT PRIMARY KEY,
+                title TEXT NOT NULL,
+                body TEXT NOT NULL,
+                created_at_unix INTEGER NOT NULL
+            )
+            "#,
+        )
+        .execute(&pool)
+        .await
+        .unwrap_or_else(|err| panic!("Failed to initialize notes table: {err}"));
+
+        Self { pool }
     }
 
-    pub fn list_desc(&self) -> Vec<Note> {
-        let mut notes = self.notes.clone();
-        notes.sort_by_key(|note| Reverse(note.created_at_unix));
-        notes
+    pub async fn list_desc(&self) -> Vec<Note> {
+        let rows = sqlx::query(
+            "SELECT id, title, body, created_at_unix FROM notes ORDER BY created_at_unix DESC",
+        )
+        .fetch_all(&self.pool)
+        .await
+        .unwrap_or_else(|err| panic!("Failed to list notes: {err}"));
+
+        rows.into_iter()
+            .map(|row| Note {
+                id: row.get::<String, _>("id"),
+                title: row.get::<String, _>("title"),
+                body: row.get::<String, _>("body"),
+                created_at_unix: row.get::<i64, _>("created_at_unix") as u64,
+            })
+            .collect()
     }
 
-    pub fn create_note(&mut self, title: String, body: String) {
+    pub async fn create_note(&self, title: String, body: String) {
         let now = now_unix();
-        let note = Note {
-            id: format!("{now}"),
-            title,
-            body,
-            created_at_unix: now,
-        };
-        self.notes.push(note);
-        self.save();
+        let id = format!("{now}");
+        sqlx::query("INSERT INTO notes (id, title, body, created_at_unix) VALUES (?1, ?2, ?3, ?4)")
+            .bind(id)
+            .bind(title)
+            .bind(body)
+            .bind(now as i64)
+            .execute(&self.pool)
+            .await
+            .unwrap_or_else(|err| panic!("Failed to create note: {err}"));
     }
 
-    pub fn delete_note(&mut self, id: &str) {
-        self.notes.retain(|note| note.id != id);
-        self.save();
+    pub async fn delete_note(&self, id: &str) {
+        sqlx::query("DELETE FROM notes WHERE id = ?1")
+            .bind(id)
+            .execute(&self.pool)
+            .await
+            .unwrap_or_else(|err| panic!("Failed to delete note: {err}"));
     }
 
-    pub fn update_note(&mut self, id: &str, title: String, body: String) -> Option<Note> {
-        let index = self.notes.iter().position(|note| note.id == id)?;
-        self.notes[index].title = title;
-        self.notes[index].body = body;
-        let updated_note = self.notes[index].clone();
-        self.save();
-        Some(updated_note)
-    }
+    pub async fn update_note(&self, id: &str, title: String, body: String) -> Option<Note> {
+        let result = sqlx::query("UPDATE notes SET title = ?1, body = ?2 WHERE id = ?3")
+            .bind(title)
+            .bind(body)
+            .bind(id)
+            .execute(&self.pool)
+            .await
+            .unwrap_or_else(|err| panic!("Failed to update note: {err}"));
 
-    pub fn get_note(&self, id: &str) -> Option<Note> {
-        self.notes.iter().find(|note| note.id == id).cloned()
-    }
-
-    fn save(&self) {
-        match serde_json::to_string_pretty(&self.notes) {
-            Ok(content) => {
-                if let Err(err) = fs::write(&self.file_path, content) {
-                    eprintln!("Failed to save notes: {err}");
-                }
-            }
-            Err(err) => eprintln!("Failed to serialize notes: {err}"),
+        if result.rows_affected() == 0 {
+            return None;
         }
+
+        self.get_note(id).await
+    }
+
+    pub async fn get_note(&self, id: &str) -> Option<Note> {
+        let row = sqlx::query("SELECT id, title, body, created_at_unix FROM notes WHERE id = ?1")
+            .bind(id)
+            .fetch_optional(&self.pool)
+            .await
+            .unwrap_or_else(|err| panic!("Failed to get note: {err}"))?;
+
+        Some(Note {
+            id: row.get::<String, _>("id"),
+            title: row.get::<String, _>("title"),
+            body: row.get::<String, _>("body"),
+            created_at_unix: row.get::<i64, _>("created_at_unix") as u64,
+        })
     }
 }

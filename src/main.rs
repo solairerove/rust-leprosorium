@@ -12,7 +12,7 @@ use store::NotesStore;
 
 #[tokio::main]
 async fn main() {
-    let store = NotesStore::load_or_new(Path::new("notes_data"));
+    let store = NotesStore::load_or_new(Path::new("notes_data")).await;
     let state = AppState::new(store);
     let app = app::build_router(state);
 

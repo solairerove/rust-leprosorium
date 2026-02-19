@@ -3,7 +3,7 @@
 Starter offline notes service on Rust:
 - backend: `axum`
 - frontend: server-side HTML + `htmx`
-- storage: local file `notes_data/notes.json` (no database)
+- storage: local SQLite database `notes_data/notes.db`
 - rust notes: `README_RUST_NOTES.md`
 
 ## Development Commands
@@ -37,13 +37,13 @@ Open `http://127.0.0.1:3000`.
 - Open note details
 - Edit/update note
 - Delete note
-- Persistent file storage without DB
+- Persistent local SQLite storage
 
 ## Why this stack
 
 - `axum` and `tokio` are stable and production-proven.
 - `htmx` keeps frontend simple, no SPA complexity.
-- JSON file storage is enough for first MVP and easy to inspect manually.
+- SQLite gives offline durability and better base for search/tags later.
 - Markdown note body is rendered safely (sanitized HTML).
 
 ## Next steps

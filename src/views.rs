@@ -110,7 +110,7 @@ pub fn render_index_page(notes: &[Note]) -> String {
   <main class="wrap">
     <section class="card">
       <h1>Offline Notes</h1>
-      <p class="muted">No DB. Notes are saved to <code>notes_data/notes.json</code>.</p>
+      <p class="muted">SQLite DB: <code>notes_data/notes.db</code>.</p>
       <form hx-post="/notes" hx-target="#notes-list" hx-swap="outerHTML">
         <input type="text" name="title" placeholder="Title" required />
         <div style="height: 8px;"></div>
