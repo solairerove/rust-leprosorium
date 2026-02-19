@@ -12,17 +12,27 @@ use store::NotesStore;
 
 #[tokio::main]
 async fn main() {
-    let store = NotesStore::load_or_new(Path::new("notes_data")).await;
+    let store = match NotesStore::load_or_new(Path::new("notes_data")).await {
+        Ok(store) => store,
+        Err(err) => {
+            eprintln!("Failed to initialize store: {err}");
+            return;
+        }
+    };
     let state = AppState::new(store);
     let app = app::build_router(state);
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
-    let listener = tokio::net::TcpListener::bind(addr)
-        .await
-        .unwrap_or_else(|err| panic!("Failed to bind on {addr}: {err}"));
+    let listener = match tokio::net::TcpListener::bind(addr).await {
+        Ok(listener) => listener,
+        Err(err) => {
+            eprintln!("Failed to bind on {addr}: {err}");
+            return;
+        }
+    };
 
     println!("Notes app: http://{addr}");
-    axum::serve(listener, app)
-        .await
-        .unwrap_or_else(|err| panic!("Server error: {err}"));
+    if let Err(err) = axum::serve(listener, app).await {
+        eprintln!("Server error: {err}");
+    }
 }
