@@ -1,13 +1,5 @@
 # Tech Debt Backlog
 
-## 1) Use Migrations Instead of Inline Schema SQL
-- Current: `src/store.rs` creates schema at runtime.
-- Target: Move schema management to SQLx migrations.
-- Actions:
-  - Add a `migrations/` folder.
-  - Move `CREATE TABLE` statements into migration files.
-  - Use `sqlx::migrate!()` during startup.
-
 ## 3) Prefer Typed SQL Rows
 - Current: Manual `row.get(...)` mapping in store.
 - Target: Compile-time-checked typed mapping.

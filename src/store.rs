@@ -25,18 +25,7 @@ impl NotesStore {
 
         let pool = SqlitePool::connect_with(options).await?;
 
-        sqlx::query(
-            r#"
-            CREATE TABLE IF NOT EXISTS notes (
-                id TEXT PRIMARY KEY,
-                title TEXT NOT NULL,
-                body TEXT NOT NULL,
-                created_at_unix INTEGER NOT NULL
-            )
-            "#,
-        )
-        .execute(&pool)
-        .await?;
+        sqlx::migrate!().run(&pool).await?;
 
         Ok(Self { pool })
     }
