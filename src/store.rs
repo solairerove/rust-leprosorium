@@ -1,8 +1,8 @@
 use std::{fs, path::Path};
 
 use sqlx::{
-    Row, SqlitePool,
-    sqlite::{SqliteConnectOptions, SqliteRow},
+    FromRow, SqlitePool,
+    sqlite::SqliteConnectOptions,
 };
 use uuid::Uuid;
 
@@ -31,13 +31,13 @@ impl NotesStore {
     }
 
     pub async fn list_desc(&self) -> sqlx::Result<Vec<Note>> {
-        let rows = sqlx::query(
+        let rows = sqlx::query_as::<_, NoteRow>(
             "SELECT id, title, body, created_at_unix FROM notes ORDER BY created_at_unix DESC",
         )
         .fetch_all(&self.pool)
         .await?;
 
-        Ok(rows.into_iter().map(note_from_row).collect())
+        Ok(rows.into_iter().map(Note::from).collect())
     }
 
     pub async fn create_note(&self, title: String, body: String) -> sqlx::Result<()> {
@@ -82,20 +82,32 @@ impl NotesStore {
     }
 
     pub async fn get_note(&self, id: &str) -> sqlx::Result<Option<Note>> {
-        let row = sqlx::query("SELECT id, title, body, created_at_unix FROM notes WHERE id = ?1")
+        let row = sqlx::query_as::<_, NoteRow>(
+            "SELECT id, title, body, created_at_unix FROM notes WHERE id = ?1",
+        )
             .bind(id)
             .fetch_optional(&self.pool)
             .await?;
 
-        Ok(row.map(note_from_row))
+        Ok(row.map(Note::from))
     }
 }
 
-fn note_from_row(row: SqliteRow) -> Note {
-    Note {
-        id: row.get::<String, _>("id"),
-        title: row.get::<String, _>("title"),
-        body: row.get::<String, _>("body"),
-        created_at_unix: row.get::<i64, _>("created_at_unix") as u64,
+#[derive(FromRow)]
+struct NoteRow {
+    id: String,
+    title: String,
+    body: String,
+    created_at_unix: i64,
+}
+
+impl From<NoteRow> for Note {
+    fn from(row: NoteRow) -> Self {
+        Self {
+            id: row.id,
+            title: row.title,
+            body: row.body,
+            created_at_unix: row.created_at_unix as u64,
+        }
     }
 }

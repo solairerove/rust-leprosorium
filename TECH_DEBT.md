@@ -1,12 +1,5 @@
 # Tech Debt Backlog
 
-## 3) Prefer Typed SQL Rows
-- Current: Manual `row.get(...)` mapping in store.
-- Target: Compile-time-checked typed mapping.
-- Actions:
-  - Add `#[derive(sqlx::FromRow)]` to `Note` (or dedicated DB model).
-  - Replace manual mapping with `query_as`.
-
 ## 4) Stronger Timestamp Semantics
 - Current: `created_at_unix: u64` is raw epoch seconds.
 - Target: Use explicit time type in Rust.
