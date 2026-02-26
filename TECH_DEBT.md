@@ -1,12 +1,5 @@
 # Tech Debt Backlog
 
-## 5) Add DB Index for List Query
-- Current: Notes are ordered by `created_at_unix` without explicit index.
-- Target: Improve scalability for `ORDER BY created_at_unix DESC`.
-- Actions:
-  - Add migration with:
-    - `CREATE INDEX IF NOT EXISTS idx_notes_created_at ON notes(created_at_unix DESC);`
-
 ## 6) Graceful Shutdown + Structured Logging
 - Current: Server runs without shutdown signal handling and minimal logging.
 - Target: Better ops behavior and observability.
