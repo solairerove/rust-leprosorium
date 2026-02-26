@@ -1,4 +1,5 @@
 mod app;
+mod error;
 mod handlers;
 mod models;
 mod state;

@@ -1297,6 +1297,7 @@ dependencies = [
  "pulldown-cmark",
  "serde",
  "sqlx",
+ "thiserror",
  "tokio",
  "uuid",
 ]

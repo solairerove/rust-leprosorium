@@ -8,14 +8,6 @@
   - Move `CREATE TABLE` statements into migration files.
   - Use `sqlx::migrate!()` during startup.
 
-## 2) Add Typed App Error
-- Current: Handlers map DB errors with repeated ad-hoc 500 responses.
-- Target: Centralized typed error handling.
-- Actions:
-  - Add `AppError` (via `thiserror`).
-  - Implement `IntoResponse` for `AppError`.
-  - Update handlers to return `Result<impl IntoResponse, AppError>`.
-
 ## 3) Prefer Typed SQL Rows
 - Current: Manual `row.get(...)` mapping in store.
 - Target: Compile-time-checked typed mapping.
