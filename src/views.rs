@@ -1,6 +1,6 @@
 use crate::{
     models::Note,
-    util::{escape_html, markdown_to_safe_html},
+    util::{escape_html, format_utc_display, markdown_to_safe_html},
 };
 
 pub fn render_index_page(notes: &[Note]) -> String {
@@ -152,7 +152,7 @@ pub fn render_notes_list(notes: &[Note]) -> String {
   </div>
 </li>"##,
             escape_html(&note.title),
-            note.created_at_unix,
+            format_utc_display(&note.created_at),
             note.id,
             note.id,
             note.id

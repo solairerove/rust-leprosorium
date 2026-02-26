@@ -1,13 +1,5 @@
 # Tech Debt Backlog
 
-## 4) Stronger Timestamp Semantics
-- Current: `created_at_unix: u64` is raw epoch seconds.
-- Target: Use explicit time type in Rust.
-- Actions:
-  - Consider `chrono::DateTime<Utc>` in model/domain layer.
-  - Keep DB representation as `INTEGER` or `TEXT` with clear conversion rules.
-  - Normalize display formatting in views.
-
 ## 5) Add DB Index for List Query
 - Current: Notes are ordered by `created_at_unix` without explicit index.
 - Target: Improve scalability for `ORDER BY created_at_unix DESC`.

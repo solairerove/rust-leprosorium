@@ -1,11 +1,12 @@
+use chrono::{DateTime, Utc};
 use pulldown_cmark::{Options, Parser, html};
-use std::time::{SystemTime, UNIX_EPOCH};
 
-pub fn now_unix() -> u64 {
-    SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map(|d| d.as_secs())
-        .unwrap_or(0)
+pub fn now_utc() -> DateTime<Utc> {
+    Utc::now()
+}
+
+pub fn format_utc_display(timestamp: &DateTime<Utc>) -> String {
+    timestamp.format("%Y-%m-%d %H:%M:%S UTC").to_string()
 }
 
 pub fn escape_html(input: &str) -> String {
