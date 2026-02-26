@@ -1,0 +1,19 @@
+<div id="notes-list" hx-swap-oob="outerHTML">
+  {% if notes.is_empty() %}
+  <p class="muted">No notes yet.</p>
+  {% else %}
+  <ul>
+    {% for note in notes %}
+    <li>
+      <strong>{{ note.title }}</strong>
+      <span class="muted">created: {{ note.created_display }}</span>
+      <div class="note-actions">
+        <button hx-get="/notes/{{ note.id }}" hx-target="#note-view" hx-swap="outerHTML">Open</button>
+        <button hx-get="/notes/{{ note.id }}/edit" hx-target="#note-view" hx-swap="outerHTML">Edit</button>
+        <button class="delete" hx-delete="/notes/{{ note.id }}" hx-target="#notes-list" hx-swap="outerHTML" hx-confirm="Delete this note?">Delete</button>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>

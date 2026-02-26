@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offline Notes</title>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <style>
+    :root {
+      --bg: #f7f7f0;
+      --card: #ffffff;
+      --text: #1f241f;
+      --muted: #657068;
+      --line: #d9ddcf;
+      --accent: #2b6f5a;
+      --danger: #9f2d2d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Iosevka", "SF Mono", "Consolas", monospace;
+      color: var(--text);
+      background: radial-gradient(circle at 1px 1px, #e6e8dc 1px, transparent 0);
+      background-size: 24px 24px;
+      min-height: 100vh;
+    }
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 900px) {
+      .wrap {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+    }
+    h1, h2 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      letter-spacing: 0.03em;
+    }
+    input, textarea, button {
+      width: 100%;
+      font: inherit;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      background: #fff;
+    }
+    textarea { min-height: 120px; resize: vertical; }
+    button {
+      cursor: pointer;
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+      font-weight: 700;
+    }
+    ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+    li {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fff;
+      display: grid;
+      gap: 8px;
+    }
+    .note-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .note-actions button {
+      width: auto;
+      flex: 1;
+    }
+    .note-actions button.delete {
+      background: var(--danger);
+      border-color: var(--danger);
+    }
+    .muted {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .preview {
+      white-space: pre-wrap;
+      border-top: 1px dashed var(--line);
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <h1>Offline Notes</h1>
+      <p class="muted">SQLite DB: <code>notes_data/notes.db</code>.</p>
+      <form hx-post="/notes" hx-target="#notes-list" hx-swap="outerHTML">
+        <input type="text" name="title" placeholder="Title" required />
+        <div style="height: 8px;"></div>
+        <textarea name="body" placeholder="Write your note..." required></textarea>
+        <div style="height: 8px;"></div>
+        <button type="submit">Save note</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Notes</h2>
+      {% include "notes_list.html" %}
+    </section>
+
+    <section class="card" id="note-view" style="grid-column: 1 / -1;">
+      <p class="muted">Open a note from list.</p>
+    </section>
+  </main>
+</body>
+</html>
