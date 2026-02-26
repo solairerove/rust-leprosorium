@@ -25,7 +25,9 @@ impl IntoResponse for AppError {
             )
                 .into_response(),
             AppError::BadRequest(html) => (StatusCode::BAD_REQUEST, Html(html)).into_response(),
-            AppError::NotFound => (StatusCode::NOT_FOUND, Html(render_note_not_found())).into_response(),
+            AppError::NotFound => {
+                (StatusCode::NOT_FOUND, Html(render_note_not_found())).into_response()
+            }
         }
     }
 }

@@ -3,8 +3,8 @@ use axum::{
     routing::{get, post},
 };
 use std::time::Duration;
-use tracing::{Span, error, warn};
 use tower_http::trace::TraceLayer;
+use tracing::{Span, error, warn};
 
 use crate::{
     handlers::{create_note, delete_note, edit_note, index, show_note, update_note},
