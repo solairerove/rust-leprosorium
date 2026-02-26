@@ -34,7 +34,22 @@
     }
     @media (min-width: 900px) {
       .wrap {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(360px, 1fr) minmax(420px, 1.2fr);
+        align-items: start;
+      }
+    }
+    .left-pane {
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+    .right-pane {
+      align-self: start;
+    }
+    @media (min-width: 900px) {
+      .right-pane {
+        position: sticky;
+        top: 24px;
       }
     }
     .card {
@@ -86,6 +101,13 @@
       background: var(--danger);
       border-color: var(--danger);
     }
+    .note-row {
+      transition: border-color 120ms ease, box-shadow 120ms ease;
+    }
+    .note-row.is-active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(43, 111, 90, 0.18);
+    }
     .muted {
       color: var(--muted);
       font-size: 0.9rem;
@@ -96,30 +118,103 @@
       padding-top: 10px;
       margin-top: 10px;
     }
+    .stack-gap {
+      height: 8px;
+    }
   </style>
 </head>
 <body>
   <main class="wrap">
-    <section class="card">
-      <h1>Offline Notes</h1>
-      <p class="muted">SQLite DB: <code>notes_data/notes.db</code>.</p>
-      <form hx-post="/notes" hx-target="#notes-list" hx-swap="outerHTML">
-        <input type="text" name="title" placeholder="Title" required />
-        <div style="height: 8px;"></div>
-        <textarea name="body" placeholder="Write your note..." required></textarea>
-        <div style="height: 8px;"></div>
-        <button type="submit">Save note</button>
-      </form>
+    <section class="left-pane">
+      <section class="card">
+        <h1>Offline Notes</h1>
+        <p class="muted">SQLite DB: <code>notes_data/notes.db</code>.</p>
+        <form hx-post="/notes" hx-target="#notes-list" hx-swap="outerHTML">
+          <input type="text" name="title" placeholder="Title" required />
+          <div class="stack-gap"></div>
+          <textarea name="body" placeholder="Write your note..." required></textarea>
+          <div class="stack-gap"></div>
+          <button type="submit">Save note</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Notes</h2>
+        {% include "notes_list.html" %}
+      </section>
     </section>
 
-    <section class="card">
-      <h2>Notes</h2>
-      {% include "notes_list.html" %}
-    </section>
-
-    <section class="card" id="note-view" style="grid-column: 1 / -1;">
-      <p class="muted">Open a note from list.</p>
+    <section class="right-pane">
+      <section class="card" id="note-view">
+        <p class="muted">Open a note from list.</p>
+      </section>
     </section>
   </main>
+  <script>
+    (function () {
+      const ACTIVE_NOTE_KEY = "offline-notes-active-id";
+
+      function markActive(id) {
+        const rows = document.querySelectorAll(".note-row[data-note-id]");
+        rows.forEach((row) => {
+          const isActive = id && row.dataset.noteId === id;
+          row.classList.toggle("is-active", Boolean(isActive));
+        });
+      }
+
+      function setActive(id) {
+        if (!id) {
+          sessionStorage.removeItem(ACTIVE_NOTE_KEY);
+          markActive(null);
+          return;
+        }
+        sessionStorage.setItem(ACTIVE_NOTE_KEY, id);
+        markActive(id);
+      }
+
+      function currentActive() {
+        return sessionStorage.getItem(ACTIVE_NOTE_KEY);
+      }
+
+      function revealPanelOnMobile() {
+        if (window.matchMedia("(max-width: 899px)").matches) {
+          const panel = document.getElementById("note-view");
+          if (panel) {
+            panel.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }
+      }
+
+      document.addEventListener("click", (event) => {
+        const trigger = event.target.closest("[data-note-id]");
+        if (!trigger) {
+          return;
+        }
+        setActive(trigger.dataset.noteId);
+      });
+
+      document.addEventListener("htmx:afterSwap", (event) => {
+        const target = event.detail && event.detail.target;
+        if (!target) {
+          return;
+        }
+
+        if (target.id === "note-view") {
+          revealPanelOnMobile();
+        }
+
+        if (target.id === "notes-list") {
+          const id = currentActive();
+          if (!id || !document.querySelector('.note-row[data-note-id="' + id + '"]')) {
+            setActive(null);
+            return;
+          }
+          markActive(id);
+        }
+      });
+
+      markActive(currentActive());
+    })();
+  </script>
 </body>
 </html>

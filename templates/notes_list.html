@@ -4,12 +4,12 @@
   {% else %}
   <ul>
     {% for note in notes %}
-    <li>
+    <li class="note-row" data-note-id="{{ note.id }}">
       <strong>{{ note.title }}</strong>
       <span class="muted">created: {{ note.created_display }}</span>
       <div class="note-actions">
-        <button hx-get="/notes/{{ note.id }}" hx-target="#note-view" hx-swap="outerHTML">Open</button>
-        <button hx-get="/notes/{{ note.id }}/edit" hx-target="#note-view" hx-swap="outerHTML">Edit</button>
+        <button data-note-id="{{ note.id }}" hx-get="/notes/{{ note.id }}" hx-target="#note-view" hx-swap="outerHTML">Open</button>
+        <button data-note-id="{{ note.id }}" hx-get="/notes/{{ note.id }}/edit" hx-target="#note-view" hx-swap="outerHTML">Edit</button>
         <button class="delete" hx-delete="/notes/{{ note.id }}" hx-target="#notes-list" hx-swap="outerHTML" hx-confirm="Delete this note?">Delete</button>
       </div>
     </li>

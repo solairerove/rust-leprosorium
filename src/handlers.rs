@@ -71,7 +71,7 @@ pub async fn update_note(
 
     if title.is_empty() || body.is_empty() {
         return Err(AppError::BadRequest(
-            "<section class=\"card\" id=\"note-view\" style=\"grid-column: 1 / -1;\"><p class=\"muted\">Title and body are required.</p></section>".to_string(),
+            "<section class=\"card\" id=\"note-view\"><p class=\"muted\">Title and body are required.</p></section>".to_string(),
         ));
     }
 

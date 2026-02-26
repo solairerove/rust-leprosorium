@@ -1,11 +1,11 @@
-<section class="card" id="note-view" style="grid-column: 1 / -1;">
+<section class="card" id="note-view">
   <h2>Edit note</h2>
   <p class="muted">id: {{ note.id }}</p>
   <form hx-put="/notes/{{ note.id }}" hx-target="#note-view" hx-swap="outerHTML">
     <input type="text" name="title" value="{{ note.title }}" required />
-    <div style="height: 8px;"></div>
+    <div class="stack-gap"></div>
     <textarea name="body" required>{{ note.body }}</textarea>
-    <div style="height: 8px;"></div>
+    <div class="stack-gap"></div>
     <button type="submit">Update note</button>
   </form>
 </section>
