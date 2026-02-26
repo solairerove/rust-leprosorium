@@ -2,6 +2,7 @@ use axum::{
     Router,
     routing::{get, post},
 };
+use tower_http::trace::TraceLayer;
 
 use crate::{
     handlers::{create_note, delete_note, edit_note, index, show_note, update_note},
@@ -17,5 +18,6 @@ pub fn build_router(state: AppState) -> Router {
             "/notes/{id}",
             get(show_note).put(update_note).delete(delete_note),
         )
+        .layer(TraceLayer::new_for_http())
         .with_state(state)
 }
