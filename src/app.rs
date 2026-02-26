@@ -2,6 +2,8 @@ use axum::{
     Router,
     routing::{get, post},
 };
+use std::time::Duration;
+use tracing::{Span, error, warn};
 use tower_http::trace::TraceLayer;
 
 use crate::{
@@ -18,6 +20,15 @@ pub fn build_router(state: AppState) -> Router {
             "/notes/{id}",
             get(show_note).put(update_note).delete(delete_note),
         )
-        .layer(TraceLayer::new_for_http())
+        .layer(TraceLayer::new_for_http().on_response(
+            |response: &axum::response::Response, latency: Duration, _span: &Span| {
+                let status = response.status();
+                if status.is_server_error() {
+                    error!(%status, latency_ms = latency.as_millis(), "request failed");
+                } else if status.is_client_error() {
+                    warn!(%status, latency_ms = latency.as_millis(), "client request error");
+                }
+            },
+        ))
         .with_state(state)
 }
